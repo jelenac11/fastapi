@@ -1,2 +1,1 @@
-# fastapi
-FastAPI + Pydantic + SqlAlchemy
+# fastapi-sqlalchemy
