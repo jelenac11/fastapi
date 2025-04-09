@@ -38,7 +38,6 @@ async def get_posts(
     include: str | None = Query(None),
     post_service: QueryService = Depends(Provide[Container.post_service]),
 ) -> list[PostResponse]:
-    """Ges posts placeholder text."""
     filters = {"status": status} if status else {}
     include = [item.strip() for item in include.split(",")] if include else []
     result = await post_service.get_many(

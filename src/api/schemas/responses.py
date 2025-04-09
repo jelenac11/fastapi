@@ -1,44 +1,34 @@
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from api.schemas.base import SafeBaseModel
 
 
-class TagBaseResponse(BaseModel):
+class BaseResponse(BaseModel):
     id: UUID
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class TagBaseResponse(BaseResponse):
     name: str
 
-    class Config:
-        from_attributes = True
 
-
-class CommentBaseResponse(BaseModel):
-    id: UUID
+class CommentBaseResponse(BaseResponse):
     content: str
     user_id: UUID
     post_id: UUID
 
-    class Config:
-        from_attributes = True
 
-
-class UserBaseResponse(BaseModel):
-    id: UUID
+class UserBaseResponse(BaseResponse):
     username: str
 
-    class Config:
-        from_attributes = True
 
-
-class PostBaseResponse(BaseModel):
-    id: UUID
+class PostBaseResponse(BaseResponse):
     title: str
     content: str
     status: str
-
-    class Config:
-        from_attributes = True
 
 
 class UserResponse(UserBaseResponse, SafeBaseModel):

@@ -51,6 +51,13 @@ async def seed_db() -> None:
                 user=user2,
             )
 
+            post3 = Post(
+                title="Understanding SQLAlchemy",
+                content="A comprehensive guide to SQLAlchemy ORM.",
+                status=PostStatus.PUBLISHED,
+                user=user1,
+            )
+
             # Creating comments
             comment1 = Comment(
                 content="Great post! Really informative.", user=user1, post=post1
@@ -63,7 +70,18 @@ async def seed_db() -> None:
 
             # Add all to session
             session.add_all(
-                [user1, user2, tag1, tag2, tag3, post1, post2, comment1, comment2]
+                [
+                    user1,
+                    user2,
+                    tag1,
+                    tag2,
+                    tag3,
+                    post1,
+                    post2,
+                    post3,
+                    comment1,
+                    comment2,
+                ]
             )
 
     print("Database seeded successfully!")

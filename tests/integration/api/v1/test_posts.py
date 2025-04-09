@@ -23,9 +23,8 @@ async def setup_db(db_engine, user, tag, post, comment):
         post.tags.append(tag)
 
         session.add(post)
-        await session.flush()  # NOW post.id is available
+        await session.flush()
 
-        # Now we can safely assign post_id
         comment.post_id = post.id
         comment.user_id = user.id
 

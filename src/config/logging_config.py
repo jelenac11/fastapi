@@ -33,7 +33,6 @@ def setup_logging() -> None:
     root_handler.setFormatter(json_formatter)
     root_logger.handlers = [root_handler]
 
-    # Disable uvicorn access logging if necessary
     logging.getLogger("uvicorn.access").disabled = True
 
     # Configure Uvicorn loggers to use JSON formatting

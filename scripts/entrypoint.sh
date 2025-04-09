@@ -6,4 +6,4 @@ set -e
 alembic upgrade head
 
 # Start the FastAPI app with Uvicorn
-exec uvicorn --app-dir ./src main:app --host 0.0.0.0 --port 8080 "$@"
+exec uvicorn --app-dir ./src main:app --host 0.0.0.0 --port 8080 --reload "$@"

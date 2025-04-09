@@ -1,5 +1,6 @@
 import logging
-from collections.abc import Awaitable
+from collections.abc import AsyncGenerator, Awaitable
+from contextlib import asynccontextmanager
 from typing import Any, Callable
 
 from dotenv import load_dotenv
@@ -18,12 +19,29 @@ logger = logging.getLogger(__name__)
 
 load_dotenv(dotenv_path=".env", override=True)
 
-app = FastAPI(
-    title="FASTAPI+SQLAlchemy+Pydantic",
-)
-
 container = Container()
 container.config.from_pydantic(AppConfig())
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncGenerator[None, None]:
+    # Startup logic (if needed)
+    yield
+    # Shutdown logic
+    if container.db is not None:
+        await container.db().engine.dispose()
+
+
+app = FastAPI(
+    title="FASTAPI+SQLAlchemy+Pydantic",
+    lifespan=lifespan,
+    openapi_tags=[
+        health.health_metadata,
+        posts.posts_metadata,
+        users.users_metadata,
+    ],
+)
+
 app.container = container  # type: ignore
 
 
