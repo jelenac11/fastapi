@@ -1,8 +1,8 @@
 import logging
 from typing import Any, Awaitable, Callable
+from api import health
 from config.logging_config import setup_logging
-from fastapi import FastAPI, Response, status, Request
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, Response, Request
 
 setup_logging()
 
@@ -26,7 +26,4 @@ async def access_log_middleware(request: Request, call_next: Callable[[Request],
     return response
 
 
-@app.get("/test")
-def health() -> Response:
-    """Provides a health check of the service."""
-    return JSONResponse(content={"message": "Service is healthy!"}, status_code=status.HTTP_200_OK)
+app.include_router(health.router)
