@@ -1,12 +1,12 @@
-from typing import Type
-from models.base import Base
 from pydantic import BaseModel
 from sqlalchemy import inspect
+
+from models.base import Base
 
 
 class SafeBaseModel(BaseModel):
     @classmethod
-    def from_orm_safe(cls: Type["SafeBaseModel"], instance: Base) -> "SafeBaseModel":
+    def from_orm_safe(cls: type["SafeBaseModel"], instance: Base) -> "SafeBaseModel":
         data = {}
         insp = inspect(instance)
 

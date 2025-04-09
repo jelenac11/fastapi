@@ -1,10 +1,13 @@
 import logging
-from typing import Any, Awaitable, Callable
+from collections.abc import Awaitable
+from typing import Any, Callable
+
+from dotenv import load_dotenv
+from fastapi import FastAPI, Request, Response
+
 from api.routes import health
 from api.routes.v1 import posts
 from config.logging_config import setup_logging
-from fastapi import FastAPI, Response, Request
-from dotenv import load_dotenv
 from container import Container
 from settings import AppConfig
 

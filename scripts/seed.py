@@ -17,12 +17,7 @@ if not DB_URL:
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root / "src"))
 
-from models.base import Base
-from models.enums import PostStatus
-from models.user import User
-from models.tag import Tag
-from models.post import Post
-from models.comment import Comment
+from models import Base, Post, User, Comment, Tag, PostStatus
 
 # Create async engine and session
 engine = create_async_engine(DB_URL, echo=True)

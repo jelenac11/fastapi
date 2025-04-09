@@ -1,7 +1,8 @@
-from typing import Optional
 from uuid import UUID
-from api.schemas.base import SafeBaseModel
+
 from pydantic import BaseModel
+
+from api.schemas.base import SafeBaseModel
 
 
 class TagBaseResponse(BaseModel):
@@ -39,8 +40,8 @@ class PostBaseResponse(BaseModel):
 
 
 class UserResponse(UserBaseResponse, SafeBaseModel):
-    comments: Optional[list[CommentBaseResponse]] = None
-    posts: Optional[list[PostBaseResponse]] = None
+    comments: list[CommentBaseResponse] | None = None
+    posts: list[PostBaseResponse] | None = None
 
 
 class PostResponse(PostBaseResponse, SafeBaseModel):

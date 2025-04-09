@@ -1,9 +1,11 @@
 import logging
-from api.schemas.responses import PostResponse
-from fastapi import APIRouter, Query, Depends
-from models.enums import PostStatus
+
 from dependency_injector.wiring import Provide, inject
+from fastapi import APIRouter, Depends, Query
+
+from api.schemas.responses import PostResponse
 from container import Container
+from models.enums import PostStatus
 from services.post import PostService
 
 logger = logging.getLogger(__name__)

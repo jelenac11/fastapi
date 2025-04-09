@@ -1,5 +1,6 @@
+from sqlalchemy import Column, ForeignKey, Table
+
 from models.base import Base
-from sqlalchemy import ForeignKey, Table, Column
 
 post_tag_association = Table(
     "post_tag",

@@ -1,13 +1,14 @@
-from typing import TYPE_CHECKING
 import uuid
-from models.base import Base
-from sqlalchemy import Text, ForeignKey
+from typing import TYPE_CHECKING
+
+from sqlalchemy import ForeignKey, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from models.base import Base
+
 if TYPE_CHECKING:
-    from models.post import Post
-    from models.user import User
+    from models import Post, User
 
 
 class Comment(Base):

@@ -1,9 +1,11 @@
 import logging
-from typing import Any, Type
-from models.base import Base
-from repository.db_manager import DatabaseManager
+from typing import Any
+
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
+
+from models.base import Base
+from repository.db_manager import DatabaseManager
 
 logger = logging.getLogger(__name__)
 
@@ -13,11 +15,12 @@ class BaseRepository:
         self.session_factory = db.session
 
     async def get_data(
-        self, model: Type[Base], filters: dict[str, Any] = None, includes: list[str] = None
+        self,
+        model: type[Base],
+        filters: dict[str, Any] | None = None,
+        includes: list[str] | None = None,
     ) -> list[Base]:
-        """
-        Generic query function for filtering and including related models.
-        """
+        """Generic query function for filtering and including related models."""
         query = select(model)
 
         # Apply filters dynamically
@@ -27,7 +30,7 @@ class BaseRepository:
                 if column:
                     query = query.filter(column == value)
                 else:
-                    logger.warning(f"Column {key} not found in model {model.__name__}")
+                    logger.warning("Column %s not found in model %s", key, model.__name__)
 
         # Apply related table joins dynamically
         if includes:
@@ -36,7 +39,11 @@ class BaseRepository:
                 if relation_attr:
                     query = query.options(selectinload(relation_attr))
                 else:
-                    logger.warning(f"Relation {relation} not found in model {model.__name__}")
+                    logger.warning(
+                        "Relation %s not found in model %s",
+                        relation,
+                        model.__name__,
+                    )
 
         async with self.session_factory() as session:
             result = await session.execute(query)

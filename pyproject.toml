@@ -41,6 +41,41 @@ line-length = 119
 src = ["src"]
 exclude=["tests/*", "scripts/*"]
 
+[tool.ruff.lint]
+select = [
+    "ALL",
+]
+ignore = [
+    #### modules
+    "DJ",  # django
+
+    #### specific rules
+    "B008", # perform function calls in argument defaults
+    "D100", # Missing docs
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D106",
+    "D107",
+    "D200",
+    "D205",
+    "D212",
+    "D400",
+    "D401",
+    "D415",
+    "TD002",  # ignore missing todo author
+    "TD003",  # ignore missing todo link
+    "PGH003", # ignore using specific rules when ignoring type issues
+    "COM812", # missing trailing comma, since it may cause conflicts when used with formatter
+    "FAST001", # fast-api-redundant-response-model
+    "FAST002", # fast-api-non-annotated-dependency
+    "FA102", # ignore from __future__ import annotations
+    "B006",
+]
+ignore-init-module-imports = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

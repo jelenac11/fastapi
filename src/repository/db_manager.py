@@ -21,10 +21,12 @@ class DatabaseManager:
     """Database manager to create engine to manage database interactions."""
 
     def __init__(self, db_connection_str: str) -> None:
-        """Database manager to create database engine and session factory.
+        """
+        Database manager to create database engine and session factory.
 
         Args:
             db_connection_str (str): Database connection string
+
         """
         self._engine = create_async_engine(
             db_connection_str,
