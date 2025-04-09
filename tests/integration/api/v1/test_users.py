@@ -1,6 +1,7 @@
 import uuid
 import pytest
 from models import Base
+from tests.utils.asserts import assert_comment_data, assert_post_data, assert_user_data
 
 
 async def setup_db(db_engine, user, tag, post, comment):
@@ -46,8 +47,7 @@ async def test_get_user(client, db_engine, user, tag, post, comment):
     response = client.get(f"/api/v1/users/{user.id}")
     assert response.status_code == 200
     response_json = response.json()
-    assert response_json["id"] == str(user.id)
-    assert response_json["username"] == user.username
+    assert_user_data(response_json, user)
     assert "posts" not in response_json
     assert "comments" not in response_json
 
@@ -55,10 +55,8 @@ async def test_get_user(client, db_engine, user, tag, post, comment):
     response = client.get(f"/api/v1/users/{user.id}?include=comments,posts")
     assert response.status_code == 200
     response_json = response.json()
-    assert response_json["id"] == str(user.id)
-    assert response_json["username"] == user.username
+    assert_user_data(response_json, user)
     assert len(response_json["posts"]) == 1
-    assert response_json["posts"][0]["id"] == str(post.id)
-    assert response_json["posts"][0]["title"] == post.title
-    assert response_json["comments"][0]["id"] == str(comment.id)
-    assert response_json["comments"][0]["content"] == comment.content
+    assert_post_data(response_json["posts"][0], post)
+    assert len(response_json["comments"]) == 1
+    assert_comment_data(response_json["comments"][0], comment)

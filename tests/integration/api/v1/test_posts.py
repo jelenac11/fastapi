@@ -1,6 +1,12 @@
 import uuid
 import pytest
 from models import Base
+from tests.utils.asserts import (
+    assert_comment_data,
+    assert_post_data,
+    assert_tag_data,
+    assert_user_data,
+)
 
 
 async def setup_db(db_engine, user, tag, post, comment):
@@ -44,10 +50,7 @@ async def test_get_posts(client, db_engine, user, tag, post, comment):
     response_json = response.json()
     assert isinstance(response_json, list)
     assert len(response_json) == 1
-    assert response_json[0]["id"] == str(post.id)
-    assert response_json[0]["title"] == post.title
-    assert response_json[0]["content"] == post.content
-    assert response_json[0]["status"] == post.status
+    assert_post_data(response_json[0], post)
     assert "user" not in response_json[0]
 
     # Test case 2: get posts with status draft, should return 1 post
@@ -56,8 +59,8 @@ async def test_get_posts(client, db_engine, user, tag, post, comment):
     response_json = response.json()
     assert isinstance(response_json, list)
     assert len(response_json) == 1
-    assert response_json[0]["id"] == str(post.id)
-    assert response_json[0]["title"] == post.title
+    assert len(response_json) == 1
+    assert_post_data(response_json[0], post)
 
     # Test case 3: get posts with status published, should return 0 posts
     response = client.get("/api/v1/posts?status=published")
@@ -73,14 +76,10 @@ async def test_get_posts(client, db_engine, user, tag, post, comment):
     assert isinstance(response_json, list)
     assert len(response_json) == 1
 
-    assert response_json[0]["id"] == str(post.id)
-    assert response_json[0]["title"] == post.title
-    assert response_json[0]["content"] == post.content
-    assert response_json[0]["status"] == post.status
+    assert_post_data(response_json[0], post)
     assert len(response_json[0]["tags"]) == 1
-    assert response_json[0]["tags"][0]["id"] == str(tag.id)
-    assert response_json[0]["tags"][0]["name"] == tag.name
-    assert response_json[0]["user"]["id"] == str(user.id)
+    assert_tag_data(response_json[0]["tags"][0], tag)
+    assert_user_data(response_json[0]["user"], user)
 
 
 @pytest.mark.asyncio
@@ -97,31 +96,26 @@ async def test_get_post(client, db_engine, user, tag, post, comment):
     response = client.get(f"/api/v1/posts/{post.id}")
     assert response.status_code == 200
     response_json = response.json()
-    assert response_json["id"] == str(post.id)
-    assert response_json["title"] == post.title
+    assert_post_data(response_json, post)
+    assert "user" not in response_json
+    assert "tags" not in response_json
+    assert "comments" not in response_json
 
     # Test case 3: get post by id with include tags, should return post with tags (1)
     response = client.get(f"/api/v1/posts/{post.id}?include=tags")
     assert response.status_code == 200
     response_json = response.json()
-    assert response_json["id"] == str(post.id)
-    assert response_json["title"] == post.title
+    assert_post_data(response_json, post)
     assert len(response_json["tags"]) == 1
-    assert response_json["tags"][0]["id"] == str(tag.id)
+    assert_tag_data(response_json["tags"][0], tag)
 
     # Test case 4: get post by id with include user, tags, comments, should return post with user, tags (1) and comments (1)
     response = client.get(f"/api/v1/posts/{post.id}?include=user,tags,comments")
     assert response.status_code == 200
     response_json = response.json()
-    assert response_json["id"] == str(post.id)
-    assert response_json["title"] == post.title
-    assert response_json["content"] == post.content
-    assert response_json["status"] == post.status
+    assert_post_data(response_json, post)
+    assert_user_data(response_json["user"], user)
     assert len(response_json["tags"]) == 1
-    assert response_json["tags"][0]["id"] == str(tag.id)
-    assert response_json["tags"][0]["name"] == tag.name
+    assert_tag_data(response_json["tags"][0], tag)
     assert len(response_json["comments"]) == 1
-    assert response_json["comments"][0]["id"] == str(comment.id)
-    assert response_json["comments"][0]["content"] == comment.content
-    assert response_json["user"]["id"] == str(user.id)
-    assert response_json["user"]["username"] == user.username
+    assert_comment_data(response_json["comments"][0], comment)
