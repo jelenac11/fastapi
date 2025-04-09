@@ -62,7 +62,7 @@ docker compose up
 ```bash
 pytest
 ```
-NOTE: In order to run tests .env.test file should be created and configured. 
+NOTE: In order to run tests .env.test file should be created and configured.
 
 ## Development
 
