@@ -1,10 +1,9 @@
+import uuid
 import pytest
 from models import Base
 
 
-@pytest.mark.asyncio
-async def test_get_posts(client, db_engine, user, tag, post, comment):
-    # Setup the database
+async def setup_db(db_engine, user, tag, post, comment):
     async with db_engine.session() as session:
         # Delete all existing data
         for table in reversed(Base.metadata.sorted_tables):
@@ -31,6 +30,12 @@ async def test_get_posts(client, db_engine, user, tag, post, comment):
         await session.refresh(tag)
         await session.refresh(user)
         await session.refresh(comment)
+
+
+@pytest.mark.asyncio
+async def test_get_posts(client, db_engine, user, tag, post, comment):
+    # Setup the database
+    await setup_db(db_engine, user, tag, post, comment)
 
     # Test case 1: get posts without any filters and includes, should return post
     response = client.get("/api/v1/posts")
@@ -76,3 +81,47 @@ async def test_get_posts(client, db_engine, user, tag, post, comment):
     assert response_json[0]["tags"][0]["id"] == str(tag.id)
     assert response_json[0]["tags"][0]["name"] == tag.name
     assert response_json[0]["user"]["id"] == str(user.id)
+
+
+@pytest.mark.asyncio
+async def test_get_post(client, db_engine, user, tag, post, comment):
+    # Setup the database
+    await setup_db(db_engine, user, tag, post, comment)
+
+    # Test case 1: get post by id without any includes with non-existing id, should return 404
+    non_existing_id = uuid.uuid4()
+    response = client.get(f"/api/v1/posts/{non_existing_id}")
+    assert response.status_code == 404
+
+    # Test case 2: get post by id without any includes, should return post
+    response = client.get(f"/api/v1/posts/{post.id}")
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json["id"] == str(post.id)
+    assert response_json["title"] == post.title
+
+    # Test case 3: get post by id with include tags, should return post with tags (1)
+    response = client.get(f"/api/v1/posts/{post.id}?include=tags")
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json["id"] == str(post.id)
+    assert response_json["title"] == post.title
+    assert len(response_json["tags"]) == 1
+    assert response_json["tags"][0]["id"] == str(tag.id)
+
+    # Test case 4: get post by id with include user, tags, comments, should return post with user, tags (1) and comments (1)
+    response = client.get(f"/api/v1/posts/{post.id}?include=user,tags,comments")
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json["id"] == str(post.id)
+    assert response_json["title"] == post.title
+    assert response_json["content"] == post.content
+    assert response_json["status"] == post.status
+    assert len(response_json["tags"]) == 1
+    assert response_json["tags"][0]["id"] == str(tag.id)
+    assert response_json["tags"][0]["name"] == tag.name
+    assert len(response_json["comments"]) == 1
+    assert response_json["comments"][0]["id"] == str(comment.id)
+    assert response_json["comments"][0]["content"] == comment.content
+    assert response_json["user"]["id"] == str(user.id)
+    assert response_json["user"]["username"] == user.username

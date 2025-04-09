@@ -1,4 +1,5 @@
 import logging
+from uuid import UUID
 
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Query
@@ -67,7 +68,7 @@ async def get_posts(
 )
 @inject
 async def get_post(
-    id: str,
+    id: UUID,
     include: str | None = None,
     post_service: QueryService = Depends(Provide[Container.post_service]),
 ) -> PostResponse:

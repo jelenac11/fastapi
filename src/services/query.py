@@ -1,4 +1,5 @@
 from typing import Any
+from uuid import UUID
 
 from exceptions.custom_exceptions import NotFoundError
 from models import Base
@@ -36,7 +37,7 @@ class QueryService:
 
     async def get_one(
         self,
-        id: str,
+        id: UUID,
         filters: dict[str, Any] | None = None,
         includes: list[str] | None = None,
     ) -> Base | None:
