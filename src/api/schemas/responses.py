@@ -16,6 +16,8 @@ class TagBaseResponse(BaseModel):
 class CommentBaseResponse(BaseModel):
     id: UUID
     content: str
+    user_id: UUID
+    post_id: UUID
 
     class Config:
         from_attributes = True
@@ -45,6 +47,6 @@ class UserResponse(UserBaseResponse, SafeBaseModel):
 
 
 class PostResponse(PostBaseResponse, SafeBaseModel):
-    user: UserBaseResponse | None  # Will be added only if requested
-    comments: list[CommentBaseResponse]  # Will be added only if requested
-    tags: list[TagBaseResponse]  # Will be added only if requested
+    user: UserBaseResponse | None
+    comments: list[CommentBaseResponse]
+    tags: list[TagBaseResponse]

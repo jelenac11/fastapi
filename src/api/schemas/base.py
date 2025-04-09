@@ -10,15 +10,10 @@ class SafeBaseModel(BaseModel):
         data = {}
         insp = inspect(instance)
 
-        for name, field in cls.model_fields.items():
+        for name in cls.model_fields:
             if name in insp.unloaded:
                 continue
             value = getattr(instance, name, None)
-            if isinstance(value, BaseModel):
-                data[name] = value
-            elif hasattr(field.annotation, "model_validate"):
-                data[name] = field.annotation.model_validate(value) if value else None  # type: ignore
-            else:
-                data[name] = value  # type: ignore
+            data[name] = value
 
         return cls.model_construct(**data, _fields_set=set(data.keys()))

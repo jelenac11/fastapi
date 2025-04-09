@@ -1,8 +1,9 @@
 from dependency_injector import containers, providers
 
+from models import Post
 from repository.base import BaseRepository
 from repository.db_manager import DatabaseManager
-from services.post import PostService
+from services.query import QueryService
 
 
 class Container(containers.DeclarativeContainer):
@@ -26,7 +27,8 @@ class Container(containers.DeclarativeContainer):
     )
 
     # services
-    post_service: PostService = providers.Factory(
-        PostService,
-        post_repository=base_repository,
+    post_service: QueryService = providers.Factory(
+        QueryService,
+        repository=base_repository,
+        model=Post,
     )

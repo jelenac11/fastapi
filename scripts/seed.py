@@ -24,7 +24,7 @@ engine = create_async_engine(DB_URL, echo=True)
 async_session = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
 
 
-async def seed_db():
+async def seed_db() -> None:
     async with async_session() as session:
         async with session.begin():
             # Creating users
@@ -69,7 +69,7 @@ async def seed_db():
     print("Database seeded successfully!")
 
 
-async def create_db_and_seed():
+async def create_db_and_seed() -> None:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 

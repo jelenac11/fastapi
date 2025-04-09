@@ -73,8 +73,13 @@ ignore = [
     "FAST002", # fast-api-non-annotated-dependency
     "FA102", # ignore from __future__ import annotations
     "B006",
+    "EM102", # allow f-string as exception
+    "TRY003", # allow messages outside of the exception
 ]
 ignore-init-module-imports = true
+
+[tool.ruff.lint.flake8-builtins]
+builtins-ignorelist = ["id"]
 
 [build-system]
 requires = ["poetry-core"]
