@@ -1,0 +1,50 @@
+services:
+  fastapi:
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    ports:
+      - "8000:8000"
+    container_name: fastapi_sqlalchemy
+    env_file:
+      - ./.env
+    # all code changes are automatically reflected in the running container
+    volumes:
+      - ./src:/app/src
+    # uvicorn automatically restarts the server when the code changes
+    command: --reload
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17.4
+    container_name: db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: fastapi_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_17_data:/var/lib/postgresql/17/data
+
+  # Optional, uncomment if you want to use pg gui tool
+  # pg_admin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin4
+  #   ports:
+  #     - 5050:80
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@admin.com
+  #     PGADMIN_DEFAULT_PASSWORD: admin
+  #   volumes:
+  #     - pgadmin:/var/lib/pgadmin
+
+volumes:
+  postgres_17_data:
+    driver: local
+  pgadmin:
+    driver: local
