@@ -42,8 +42,8 @@ class PostBaseResponse(BaseModel):
 
 
 class UserResponse(UserBaseResponse, SafeBaseModel):
-    comments: list[CommentBaseResponse] | None = None
-    posts: list[PostBaseResponse] | None = None
+    comments: list[CommentBaseResponse]
+    posts: list[PostBaseResponse]
 
 
 class PostResponse(PostBaseResponse, SafeBaseModel):

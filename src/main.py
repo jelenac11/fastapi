@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Response
 
 from api.routes import health
-from api.routes.v1 import posts
+from api.routes.v1 import posts, users
 from config.error_middleware import errors_config
 from config.logging_config import setup_logging
 from container import Container
@@ -42,5 +42,6 @@ async def access_log_middleware(request: Request, call_next: Callable[[Request],
 
 app.include_router(health.router)
 app.include_router(posts.router)
+app.include_router(users.router)
 
 errors_config(app)

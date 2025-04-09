@@ -15,7 +15,7 @@ router = APIRouter(prefix="/api/v1/posts", tags=["posts"])
 
 posts_metadata = {
     "name": "posts",
-    "description": "functions to manage posts.",
+    "description": "functions to retrieve posts.",
 }
 
 
