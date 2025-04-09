@@ -11,7 +11,14 @@ fastapi = "^0.115.12"
 uvicorn = "^0.34.0"
 python-json-logger = "^3.3.0"
 httpx = "^0.28.1"
-dotenv = "^0.9.9"
+pydantic = "^2.11.2"
+alembic = "^1.15.2"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.40"}
+asyncpg = "^0.30.0"
+psycopg2-binary = "^2.9.10"
+python-dotenv = "^1.1.0"
+pydantic-settings = "^2.8.1"
+dependency-injector = "^4.46.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -21,13 +28,18 @@ pytest-cov = "^6.1.1"
 pytest-asyncio = "^0.26.0"
 
 [tool.mypy]
+strict = true
 explicit_package_bases = true
 ignore_missing_imports = true
 implicit_optional = true
 allow_redefinition = true
+disallow_subclassing_any = false
+plugins = ['pydantic.mypy']
 
 [tool.ruff]
 line-length = 119
+src = ["src"]
+exclude=["tests/*", "scripts/*"]
 
 [build-system]
 requires = ["poetry-core"]
@@ -44,6 +56,8 @@ markers = [
     "integration: mark a test as an integration test",
 ]
 testpaths = [ "tests" ]
+env_files = [ ".env.test" ]
+env_override_existing_values = 1
 
 [tool.coverage.html]
 directory = "coverage_html_report"

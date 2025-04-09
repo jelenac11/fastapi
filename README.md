@@ -22,7 +22,7 @@ cd fastapi
 1. Create a virtual environment and activate it
 
 ```bash
-poetry env use python 3.13
+poetry env use python3.13
 poetry shell
 ```
 
@@ -43,7 +43,7 @@ cp .env.dist .env
 4. Run the app using uvicorn
 ```bash
 cd src/
-uvicorn main:app --reload --env-file ../.env
+uvicorn main:app --port 8080 --reload --env-file ../.env
 ```
 
 5. Run the app via docker: build docker containers (Docker must be installed on your machine)
@@ -54,6 +54,11 @@ docker compose build
 6. run docker containers (Docker must be installed on your machine)
 ```bash
 docker compose up
+```
+
+NOTE: There's  script in order to seed the db. First set database url as env var: DB_URL, and then run the following command to seed the db:
+```bash
+python scripts/seed.py
 ```
 
 7. Access the app on localhost:8000

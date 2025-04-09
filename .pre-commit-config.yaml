@@ -4,7 +4,7 @@
 # https://medium.com/staqu-dev-logs/keeping-python-code-clean-with-pre-commit-hooks-black-flake8-and-isort-cac8b01e0ea1
 default_language_version:
   python: python3.13
-exclude: ^(tests)/
+files: ^(src)/
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
@@ -23,10 +23,14 @@ repos:
     rev: v1.10.0
     hooks:
       - id: mypy # static type checker
-        args: [--strict, --ignore-missing-imports]
         additional_dependencies:
           - fastapi==0.115.12
           - python-json-logger==3.3.0
+          - pydantic==2.11.2
+          - python-dotenv==1.1.0
+          - pydantic-settings==2.8.1
+          - dependency-injector==4.46.0
+          - sqlalchemy==2.0.40
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.11.4
     hooks:

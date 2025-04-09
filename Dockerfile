@@ -33,9 +33,16 @@ RUN --mount=type=cache,target="${POETRY_CACHE_DIR}" \
 
 # Add code
 COPY /src ./src
+COPY /alembic ./alembic
+COPY /alembic.ini ./alembic.ini
 
-# run with entrypoint and cmd (which allows for adjusting arguments at runtime)
-ENTRYPOINT ["uvicorn", "--app-dir", "./src", "main:app", "--host", "0.0.0.0"]
+# Entrypoint script
+COPY /scripts/entrypoint.sh ./scripts/entrypoint.sh
+RUN chmod +x /app/scripts/entrypoint.sh
 
+# just for documentation: the port your container listens on
 EXPOSE 8080
+
+# Use the entrypoint script to run migrations and start the app
+ENTRYPOINT ["./scripts/entrypoint.sh"]
 
